@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@theme {
+  --color-green-600: #16a34a;
+}
+
+/* iOS safe area padding */
+.pt-safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+.pb-safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent text size adjustment on orientation change */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Remove tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}

@@ -1,0 +1,35 @@
+{
+  "name": "hfr",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "pages:dev": "wrangler pages dev dist --d1 DB",
+    "pages:deploy": "wrangler pages deploy dist",
+    "db:migrate:local": "wrangler d1 execute hfr-db --local --file=./migrations/0001_init.sql",
+    "db:migrate:remote": "wrangler d1 execute hfr-db --remote --file=./migrations/0001_init.sql",
+    "hash-password": "node scripts/hash-password.mjs"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.64.2",
+    "hono": "^4.7.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.2.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250310.0",
+    "@tailwindcss/vite": "^4.0.17",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.0.17",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0",
+    "vite-plugin-pwa": "^0.21.1",
+    "wrangler": "^4.4.0"
+  }
+}

@@ -1,0 +1,11 @@
+name = "hfr"
+compatibility_date = "2025-03-01"
+pages_build_output_dir = "./dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hfr-db"
+database_id = "0b521342-9c9d-43f0-bec3-1d139c655666"
+
+[ai]
+binding = "AI"
