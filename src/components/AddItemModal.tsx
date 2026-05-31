@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useAddItem } from '../hooks/useItems'
-import { calcExpiryDate } from '../utils/dateUtils'
 import ManualInput from './ManualInput'
 import ShelfLifeCalc from './ShelfLifeCalc'
 import TemplateSelector from './TemplateSelector'
@@ -37,17 +36,6 @@ export default function AddItemModal({ onClose }: Props) {
   function handleTemplateSelect(name: string, expiryDate: string) {
     setPrefill({ name, expiry: expiryDate })
     setTab('manual')
-  }
-
-  function handlePhotoResult(result: { name?: string; production_date?: string; shelf_life_days?: number }) {
-    if (result.name) {
-      const prefillData: { name?: string; expiry?: string } = { name: result.name }
-      if (result.production_date && result.shelf_life_days) {
-        prefillData.expiry = calcExpiryDate(result.production_date, result.shelf_life_days)
-      }
-      setPrefill(prefillData)
-      setTab('manual')
-    }
   }
 
   return (
@@ -98,7 +86,7 @@ export default function AddItemModal({ onClose }: Props) {
             <TemplateSelector onSelect={handleTemplateSelect} />
           )}
           {tab === 'photo' && (
-            <PhotoCapture onResult={handlePhotoResult} />
+            <PhotoCapture onSave={handleSubmit} saving={addItem.isPending} />
           )}
         </div>
       </div>
