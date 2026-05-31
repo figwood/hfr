@@ -195,15 +195,18 @@ app.post('/api/ai/recognize', async (c) => {
   const bytes = Uint8Array.from(atob(base64), (ch) => ch.charCodeAt(0))
 
   const prompt =
-    '请识别图中食品或日用品的以下信息，仅以JSON格式返回，不要附加解释：\n' +
-    '{"name":"物品名称","production_date":"生产日期(YYYY-MM-DD或null)","shelf_life_days":保质期天数或null}'
+    'You are a product label reader. Look at this product image and extract: product name, production date, and shelf life. ' +
+    'Return ONLY a JSON object with no explanation: ' +
+    '{"name":"product name in Chinese if visible","production_date":"YYYY-MM-DD or null","shelf_life_days":number or null}. ' +
+    'For shelf life, convert to days (e.g. 12 months = 365, 18 months = 548, 1 year = 365). ' +
+    'If a field is not visible, use null.'
 
   const response = await (c.env.AI as unknown as {
     run: (model: string, input: object) => Promise<{ response?: string; description?: string }>
-  }).run('@cf/llava-hf/llava-1.5-7b-hf', {
+  }).run('@cf/meta/llama-3.2-11b-vision-instruct', {
     prompt,
     image: [...bytes],
-    max_tokens: 200,
+    max_tokens: 300,
   })
 
   const text = response?.response ?? response?.description ?? ''
