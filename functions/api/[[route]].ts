@@ -81,6 +81,7 @@ app.post('/api/items', async (c) => {
     production_date?: string
     shelf_life_days?: number
     notes?: string
+    tag?: string
   }>()
 
   if (!body.id || !body.name || !body.expiry_date) {
@@ -88,10 +89,10 @@ app.post('/api/items', async (c) => {
   }
 
   await c.env.DB.prepare(
-    `INSERT INTO items (id, user_id, name, expiry_date, production_date, shelf_life_days, notes)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`
+    `INSERT INTO items (id, user_id, name, expiry_date, production_date, shelf_life_days, notes, tag)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
   )
-    .bind(body.id, userId, body.name, body.expiry_date, body.production_date ?? null, body.shelf_life_days ?? null, body.notes ?? null)
+    .bind(body.id, userId, body.name, body.expiry_date, body.production_date ?? null, body.shelf_life_days ?? null, body.notes ?? null, body.tag ?? null)
     .run()
 
   const item = await c.env.DB.prepare('SELECT * FROM items WHERE id = ?').bind(body.id).first()
@@ -108,6 +109,7 @@ app.patch('/api/items/:id', async (c) => {
     shelf_life_days?: number
     status?: 'active' | 'consumed'
     notes?: string
+    tag?: string
   }>()
 
   // verify ownership
@@ -129,7 +131,8 @@ app.patch('/api/items/:id', async (c) => {
       shelf_life_days = COALESCE(?, shelf_life_days),
       status = COALESCE(?, status),
       consumed_at = CASE WHEN ? = 'consumed' THEN ? ELSE consumed_at END,
-      notes = COALESCE(?, notes)
+      notes = COALESCE(?, notes),
+      tag = COALESCE(?, tag)
      WHERE id = ? AND user_id = ?`
   )
     .bind(
@@ -141,6 +144,7 @@ app.patch('/api/items/:id', async (c) => {
       body.status ?? null,
       consumed_at,
       body.notes ?? null,
+      body.tag ?? null,
       itemId,
       userId
     )

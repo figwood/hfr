@@ -1,41 +1,16 @@
-import { useState } from 'react'
 import { useAddItem } from '../hooks/useItems'
 import ManualInput from './ManualInput'
-import ShelfLifeCalc from './ShelfLifeCalc'
-import TemplateSelector from './TemplateSelector'
-import PhotoCapture from './PhotoCapture'
-
-type TabKey = 'manual' | 'calc' | 'template' | 'photo'
 
 interface Props {
   onClose: () => void
 }
 
-const TABS: { key: TabKey; label: string }[] = [
-  { key: 'manual', label: '手动' },
-  { key: 'calc', label: '计算' },
-  { key: 'template', label: '模板' },
-  { key: 'photo', label: '拍照' },
-]
-
 export default function AddItemModal({ onClose }: Props) {
-  const [tab, setTab] = useState<TabKey>('manual')
-  const [prefill, setPrefill] = useState<{ name?: string; expiry?: string } | null>(null)
   const addItem = useAddItem()
 
   async function handleSubmit(data: { name: string; expiry_date: string; production_date?: string; shelf_life_days?: number; notes?: string }) {
     await addItem.mutateAsync(data)
     onClose()
-  }
-
-  function handleCalcResult(expiryDate: string, _shelfLifeDays: number, _productionDate: string) {
-    setPrefill({ expiry: expiryDate })
-    setTab('manual')
-  }
-
-  function handleTemplateSelect(name: string, expiryDate: string) {
-    setPrefill({ name, expiry: expiryDate })
-    setTab('manual')
   }
 
   return (
@@ -52,42 +27,12 @@ export default function AddItemModal({ onClose }: Props) {
           </button>
         </div>
 
-        {/* Tabs */}
-        <div className="flex px-5 gap-1 mb-4">
-          {TABS.map((t) => (
-            <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
-              className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${
-                tab === t.key
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-100 text-gray-600 active:bg-gray-200'
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
-
         {/* Content */}
         <div className="px-5 pb-8">
-          {tab === 'manual' && (
-            <ManualInput
-              onSubmit={handleSubmit}
-              loading={addItem.isPending}
-              initialName={prefill?.name}
-              initialExpiry={prefill?.expiry}
-            />
-          )}
-          {tab === 'calc' && (
-            <ShelfLifeCalc onResult={handleCalcResult} />
-          )}
-          {tab === 'template' && (
-            <TemplateSelector onSelect={handleTemplateSelect} />
-          )}
-          {tab === 'photo' && (
-            <PhotoCapture onSave={handleSubmit} saving={addItem.isPending} />
-          )}
+          <ManualInput
+            onSubmit={handleSubmit}
+            loading={addItem.isPending}
+          />
         </div>
       </div>
     </div>

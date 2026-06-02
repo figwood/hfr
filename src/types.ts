@@ -9,6 +9,7 @@ export interface Item {
   created_at: string
   consumed_at?: string
   notes?: string
+  tag?: string
 }
 
 export type ItemStatus = 'expired' | 'warning' | 'safe'
