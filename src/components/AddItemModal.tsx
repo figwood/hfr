@@ -8,7 +8,7 @@ interface Props {
 export default function AddItemModal({ onClose }: Props) {
   const addItem = useAddItem()
 
-  async function handleSubmit(data: { name: string; expiry_date: string; production_date?: string; shelf_life_days?: number; notes?: string }) {
+  async function handleSubmit(data: { name: string; expiry_date: string; production_date?: string; shelf_life_days?: number; notes?: string; tag?: string }) {
     await addItem.mutateAsync(data)
     onClose()
   }

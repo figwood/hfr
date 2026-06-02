@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import type { Item } from '../types'
 import { daysUntilExpiry, getItemStatus, formatExpiryLabel } from '../utils/dateUtils'
 import { useConsumeItem } from '../hooks/useItems'
+import EditItemModal from './EditItemModal'
 
 interface Props {
   item: Item
@@ -33,6 +34,7 @@ export default function ItemCard({ item, warningDays = 3 }: Props) {
   const consume = useConsumeItem()
   const [swipeX, setSwipeX] = useState(0)
   const [confirming, setConfirming] = useState(false)
+  const [editing, setEditing] = useState(false)
   const startX = useRef<number | null>(null)
 
   const days = daysUntilExpiry(item.expiry_date)
@@ -106,6 +108,13 @@ export default function ItemCard({ item, warningDays = 3 }: Props) {
             >
               ✓
             </button>
+            <button
+              onClick={() => setEditing(true)}
+              className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 active:bg-gray-200"
+              aria-label="编辑"
+            >
+              ✎
+            </button>
           </div>
         </div>
       </div>
@@ -134,6 +143,11 @@ export default function ItemCard({ item, warningDays = 3 }: Props) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Edit modal */}
+      {editing && (
+        <EditItemModal item={item} onClose={() => setEditing(false)} />
       )}
     </>
   )
